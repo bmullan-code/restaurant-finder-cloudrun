@@ -739,18 +739,107 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   --a2ui-slider-track-margin: 0.25rem 0;
   --a2ui-slider-thumb-margin: -0.25rem 0;
 }
-`);var ev={key:`restaurant`,title:`Restaurant Finder`,heroImage:`/hero.png`,heroImageDark:`/hero-dark.png`,placeholder:`Top 5 Chinese restaurants in New York.`,loadingText:[`Finding the best spots for you...`,`Checking reviews...`,`Looking for open tables...`,`Almost there...`],serverUrl:window.location.origin,cssOverrides:$_},tv={key:`local`,title:`Local A2UI Previewer`,placeholder:`Select a local A2UI JSON file to preview...`};function nv(e,t,n,r){var i=arguments.length,a=i<3?t:r===null?r=Object.getOwnPropertyDescriptor(t,n):r,o;if(typeof Reflect==`object`&&typeof Reflect.decorate==`function`)a=Reflect.decorate(e,t,n,r);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(a=(i<3?o(a):i>3?o(t,n,a):o(t,n))||a);return i>3&&a&&Object.defineProperty(t,n,a),a}var rv={restaurant:ev,local:tv},iv=class extends je(_n){constructor(...e){super(...e),this.markdownRenderer=(e,t)=>Promise.resolve(Tg(e,t)),this._requesting=!1,this._lastMessages=[],this.config=ev,this._loadingTextIndex=0,this._isLocalMode=!1,this._localFileName=``,this._toastMessage=``,this._toastType=`info`,this._processor=new mo([Ku],async e=>{console.debug(`Handling action`,e);let t={...e.context};if(this._isLocalMode){this.showToast(`⚡ Action dispatched: "${e.name}"`,`info`);return}let n={userAction:{name:e.name,surfaceId:e.surfaceId,sourceComponentId:e.sourceComponentId,timestamp:new Date().toISOString(),context:t}};await this.#c(n)}),this._pendingSnackbarMessages=[]}static{this.styles=[T`
+`);var ev={key:`restaurant`,title:`Restaurant Finder`,heroImage:`/hero.png`,heroImageDark:`/hero-dark.png`,placeholder:`Top 5 Chinese restaurants in New York.`,loadingText:[`Finding the best spots for you...`,`Checking reviews...`,`Looking for open tables...`,`Almost there...`],serverUrl:[`localhost`,`127.0.0.1`].includes(window.location.hostname)?`http://localhost:10002`:window.location.origin,cssOverrides:$_},tv={key:`local`,title:`Local A2UI Previewer`,placeholder:`Select a local A2UI JSON file to preview...`};function nv(e,t,n,r){var i=arguments.length,a=i<3?t:r===null?r=Object.getOwnPropertyDescriptor(t,n):r,o;if(typeof Reflect==`object`&&typeof Reflect.decorate==`function`)a=Reflect.decorate(e,t,n,r);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(a=(i<3?o(a):i>3?o(t,n,a):o(t,n))||a);return i>3&&a&&Object.defineProperty(t,n,a),a}var rv={restaurant:ev,local:tv},iv=class extends je(_n){constructor(...e){super(...e),this.markdownRenderer=(e,t)=>Promise.resolve(Tg(e,t)),this._requesting=!1,this._lastMessages=[],this._showJson=!1,this.config=ev,this._loadingTextIndex=0,this._isLocalMode=!1,this._localFileName=``,this._toastMessage=``,this._toastType=`info`,this._processor=new mo([Ku],async e=>{console.debug(`Handling action`,e);let t={...e.context};if(this._isLocalMode){this.showToast(`⚡ Action dispatched: "${e.name}"`,`info`);return}let n={userAction:{name:e.name,surfaceId:e.surfaceId,sourceComponentId:e.sourceComponentId,timestamp:new Date().toISOString(),context:t}};await this.#d(n)}),this._pendingSnackbarMessages=[]}static{this.styles=[T`
       * {
         box-sizing: border-box;
       }
 
       :host {
         display: block;
-        max-width: 640px;
+        width: 100%;
         margin: 0 auto;
         min-height: 100%;
         color: light-dark(var(--n-10), var(--n-90));
         font-family: var(--font-family);
+      }
+
+      .workspace {
+        width: min(640px, 100%);
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+
+      .workspace.split {
+        width: min(1600px, 100%);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(360px, 1fr);
+        align-items: start;
+        gap: 24px;
+      }
+
+      .preview-pane {
+        min-width: 0;
+      }
+
+      .json-inspector {
+        min-width: 0;
+        max-height: calc(100vh - 88px);
+        position: sticky;
+        top: 76px;
+        overflow: auto;
+        border: 1px solid light-dark(var(--n-80), var(--n-30));
+        border-radius: 16px;
+        background: light-dark(rgba(255, 255, 255, 0.9), rgba(15, 25, 34, 0.94));
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      }
+
+      .json-inspector-header {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 20px;
+        border-bottom: 1px solid light-dark(var(--n-80), var(--n-30));
+        background: light-dark(rgba(255, 255, 255, 0.96), rgba(15, 25, 34, 0.98));
+      }
+
+      .json-inspector-header h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .segment-count {
+        color: light-dark(var(--n-30), var(--n-80));
+        font-size: 12px;
+      }
+
+      .json-empty {
+        margin: 0;
+        padding: 24px 20px;
+        color: light-dark(var(--n-30), var(--n-80));
+        line-height: 1.5;
+      }
+
+      .json-segment {
+        border-bottom: 1px solid light-dark(var(--n-85), var(--n-30));
+      }
+
+      .json-segment:last-child {
+        border-bottom: none;
+      }
+
+      .json-segment-title {
+        padding: 12px 20px 0;
+        color: light-dark(var(--p-30), var(--p-70));
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .json-segment pre {
+        margin: 0;
+        padding: 12px 20px 20px;
+        overflow-x: auto;
+        color: light-dark(var(--n-10), var(--n-90));
+        font-family: var(--font-family-mono);
+        font-size: 12px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
       }
 
       #hero-img {
@@ -883,6 +972,50 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           &::before {
             content: 'dark_mode';
           }
+        }
+      }
+
+      .json-toggle {
+        position: fixed;
+        z-index: 100;
+        top: var(--bb-grid-size-3);
+        right: 76px;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border: 1px solid light-dark(var(--n-80), var(--n-30));
+        border-radius: 24px;
+        background: light-dark(var(--n-100), var(--n-0));
+        color: light-dark(var(--n-10), var(--n-90));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .json-toggle input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        accent-color: var(--p-40);
+        cursor: pointer;
+      }
+
+      @media (max-width: 900px) {
+        .workspace.split {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .json-inspector {
+          position: static;
+          max-height: 50vh;
+        }
+
+        .json-toggle {
+          top: 68px;
+          right: var(--bb-grid-size-4);
         }
       }
 
@@ -1173,23 +1306,60 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           rotate: 360deg;
         }
       }
-    `]}#e(){return this._error?S`<div class="error">${this._error}</div>`:C}connectedCallback(){super.connectedCallback();let e=new URLSearchParams(window.location.search).get(`app`);e&&!rv[e]&&this._pendingSnackbarMessages.push({message:{id:crypto.randomUUID(),message:`App "${e}" is not available. Falling back to Restaurant Finder.`,type:Tn.WARNING,persistent:!1},replaceAll:!1}),this.config=e&&rv[e]||ev,this.config.cssOverrides&&!document.adoptedStyleSheets.includes(this.config.cssOverrides)&&(document.adoptedStyleSheets=[...document.adoptedStyleSheets,this.config.cssOverrides]),document.title=this.config.title,this._a2uiClient=new Z_(this.config.serverUrl)}firstUpdated(){if(this._pendingSnackbarMessages.length>0){for(let{message:e,replaceAll:t}of this._pendingSnackbarMessages)this.snackbar.show(e,t);this._pendingSnackbarMessages=[]}}render(){return[this.#t(),this.#n(),this.#r(),this.#s(),this.#e(),this.#p(),S`<ui-snackbar></ui-snackbar>`]}#t(){return this._isLocalMode?S`
+    `]}#e(){return this._error?S`<div class="error">${this._error}</div>`:C}connectedCallback(){super.connectedCallback();let e=new URLSearchParams(window.location.search).get(`app`);e&&!rv[e]&&this._pendingSnackbarMessages.push({message:{id:crypto.randomUUID(),message:`App "${e}" is not available. Falling back to Restaurant Finder.`,type:Tn.WARNING,persistent:!1},replaceAll:!1}),this.config=e&&rv[e]||ev,this.config.cssOverrides&&!document.adoptedStyleSheets.includes(this.config.cssOverrides)&&(document.adoptedStyleSheets=[...document.adoptedStyleSheets,this.config.cssOverrides]),document.title=this.config.title,this._a2uiClient=new Z_(this.config.serverUrl)}firstUpdated(){if(this._pendingSnackbarMessages.length>0){for(let{message:e,replaceAll:t}of this._pendingSnackbarMessages)this.snackbar.show(e,t);this._pendingSnackbarMessages=[]}}render(){return S`
+      ${this.#a()} ${this.#t()}
+      <div class=${this._showJson?`workspace split`:`workspace`}>
+        <main class="preview-pane">
+          ${this.#i()} ${this.#o()} ${this.#u()}
+          ${this.#e()}
+        </main>
+        ${this._showJson?this.#n():C}
+      </div>
+      ${this.#g()}
+      <ui-snackbar></ui-snackbar>
+    `}#t(){return S`
+      <label class="json-toggle">
+        <input
+          type="checkbox"
+          .checked=${this._showJson}
+          @change=${e=>{this._showJson=e.target.checked}}
+        />
+        <span>Show A2UI JSON</span>
+      </label>
+    `}#n(){return S`
+      <aside class="json-inspector" aria-label="A2UI JSON segments">
+        <header class="json-inspector-header">
+          <h2>A2UI JSON</h2>
+          <span class="segment-count">
+            ${this._lastMessages.length} ${this._lastMessages.length===1?`segment`:`segments`}
+          </span>
+        </header>
+        ${this._lastMessages.length===0?S`<p class="json-empty">
+              Send a request to see the A2UI JSON used to render the current view.
+            </p>`:this._lastMessages.map((e,t)=>S`
+                <section class="json-segment">
+                  <div class="json-segment-title">Segment ${t+1}</div>
+                  <pre><code>${this.#r(e)}</code></pre>
+                </section>
+              `)}
+      </aside>
+    `}#r(e){try{return JSON.stringify(e,null,2)??String(e)}catch{return String(e)}}#i(){return this._isLocalMode?S`
       <div class="local-mode-header">
         <span class="file-info">
           Loaded local mockup: <strong>${this._localFileName}</strong>
         </span>
-        <button class="clear-btn" @click=${this.#d} title="Clear local mockup">
+        <button class="clear-btn" @click=${this.#m} title="Clear local mockup">
           <span class="material-symbols">close</span>
         </button>
       </div>
-    `:C}#n(){return S` <div>
+    `:C}#a(){return S` <div>
       <button
         @click=${e=>{if(!(e.target instanceof HTMLButtonElement))return;let{colorScheme:t}=window.getComputedStyle(e.target);t===`dark`?(document.body.classList.add(`light`),document.body.classList.remove(`dark`)):(document.body.classList.add(`dark`),document.body.classList.remove(`light`))}}
         class="theme-toggle"
       >
         <span class="material-symbols"></span>
       </button>
-    </div>`}#r(){return this._requesting||this._lastMessages.length>0||this._isLocalMode?C:this.config.key===`local`?S`
+    </div>`}#o(){return this._requesting||this._lastMessages.length>0||this._isLocalMode?C:this.config.key===`local`?S`
         <div class="local-header-section">
           <h1>${this.config.title}</h1>
           <p>
@@ -1201,7 +1371,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         </div>
 
         <div class="local-upload-container">
-          <button type="button" class="primary-upload-btn" @click=${this.#l}>
+          <button type="button" class="primary-upload-btn" @click=${this.#f}>
             Browse JSON File
           </button>
 
@@ -1210,7 +1380,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
             accept=".json"
             id="local-file-input"
             style="display: none"
-            @change=${this.#u}
+            @change=${this.#p}
           />
 
           <div class="samples-section">
@@ -1219,14 +1389,14 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
               <button
                 type="button"
                 class="sample-btn"
-                @click=${()=>this.#f(`contact_card.json`)}
+                @click=${()=>this.#h(`contact_card.json`)}
               >
                 Contact Card
               </button>
               <button
                 type="button"
                 class="sample-btn"
-                @click=${()=>this.#f(`workspace_settings.json`)}
+                @click=${()=>this.#h(`workspace_settings.json`)}
               >
                 Workspace Setup
               </button>
@@ -1234,7 +1404,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           </div>
         </div>
       `:S`<form
-      @submit=${async e=>{if(e.preventDefault(),!(e.target instanceof HTMLFormElement))return;let t=new FormData(e.target).get(`body`)??null;if(!t)return;let n=t;await this.#c(n)}}
+      @submit=${async e=>{if(e.preventDefault(),!(e.target instanceof HTMLFormElement))return;let t=new FormData(e.target).get(`body`)??null;if(!t)return;let n=t;await this.#d(n)}}
     >
       ${this.config.heroImage?S`<div
             style=${su({"--background-image-light":`url(${this.config.heroImage})`,"--background-image-dark":`url(${this.config.heroImageDark??this.config.heroImage})`})}
@@ -1255,16 +1425,16 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           <span class="material-symbols">send</span>
         </button>
       </div>
-    </form>`}#i(){let e=this.config.loadingText;e&&e.length>1&&(this._loadingTextIndex=0,this._loadingInterval=window.setInterval(()=>{this._loadingTextIndex=(this._loadingTextIndex+1)%e.length},2e3))}#a(){this._loadingInterval&&=(clearInterval(this._loadingInterval),void 0)}async#o(e){try{this._requesting=!0,this.#i();let t=this._a2uiClient.send(e);return await t,this._requesting=!1,this.#a(),t}catch(e){console.error(e)}finally{this._requesting=!1,this.#a()}return[]}#s(){if(this._requesting)return S` <div class="pending">
+    </form>`}#s(){let e=this.config.loadingText;e&&e.length>1&&(this._loadingTextIndex=0,this._loadingInterval=window.setInterval(()=>{this._loadingTextIndex=(this._loadingTextIndex+1)%e.length},2e3))}#c(){this._loadingInterval&&=(clearInterval(this._loadingInterval),void 0)}async#l(e){try{this._requesting=!0,this.#s();let t=this._a2uiClient.send(e);return await t,this._requesting=!1,this.#c(),t}catch(e){console.error(e)}finally{this._requesting=!1,this.#c()}return[]}#u(){if(this._requesting)return S` <div class="pending">
         <div class="spinner"></div>
         <div class="loading-text">${this.config.loadingText?this.config.loadingText[this._loadingTextIndex]:`Awaiting an answer...`}</div>
       </div>`;let e=Array.from(this._processor.model.surfacesMap.entries());return e.length===0?C:(console.debug(`Rendering surfaces`,e),S`<section id="surfaces">
       ${Dn(e,([e])=>e,([,e])=>S`<a2ui-surface .surface=${e}></a2ui-surface>`)}
-    </section>`)}async#c(e){let t=await this.#o(e);console.debug(`Received messages`,t),this._lastMessages=t;for(let e of Array.from(this._processor.model.surfacesMap.keys()))this._processor.model.deleteSurface(e);this._processor.processMessages(t)}#l(){let e=this.shadowRoot?.getElementById(`local-file-input`);e&&e.click()}#u(e){let t=e.target,n=t.files?.[0];if(!n)return;this._localFileName=n.name;let r=new FileReader;r.onload=e=>{try{let t=e.target?.result,r=JSON.parse(t),i=Array.isArray(r)?r:[r];this._isLocalMode=!0;for(let e of Array.from(this._processor.model.surfacesMap.keys()))this._processor.model.deleteSurface(e);this._processor.processMessages(i),this.showToast(`Successfully loaded mockup from ${n.name}`,`info`)}catch(e){console.error(e),this.showToast(`Failed to parse A2UI JSON: ${e instanceof Error?e.message:String(e)}`,`error`)}},r.readAsText(n),t.value=``}#d(){this._isLocalMode=!1,this._localFileName=``;for(let e of Array.from(this._processor.model.surfacesMap.keys()))this._processor.model.deleteSurface(e);this.showToast(`Local mockup cleared.`,`info`)}async#f(e){try{this._localFileName=e;let t=await fetch(`/samples/${e}`);if(!t.ok)throw Error(`Failed to fetch sample file: ${t.statusText}`);let n=await t.json(),r=Array.isArray(n)?n:[n];this._isLocalMode=!0;for(let e of Array.from(this._processor.model.surfacesMap.keys()))this._processor.model.deleteSurface(e);this._processor.processMessages(r),this.showToast(`Successfully loaded sample: ${e}`,`info`)}catch(e){console.error(e),this.showToast(`Failed to load sample JSON: ${e instanceof Error?e.message:String(e)}`,`error`)}}#p(){return this._toastMessage?S`
+    </section>`)}async#d(e){let t=await this.#l(e);console.debug(`Received messages`,t),this._lastMessages=t;for(let e of Array.from(this._processor.model.surfacesMap.keys()))this._processor.model.deleteSurface(e);this._processor.processMessages(t)}#f(){let e=this.shadowRoot?.getElementById(`local-file-input`);e&&e.click()}#p(e){let t=e.target,n=t.files?.[0];if(!n)return;this._localFileName=n.name;let r=new FileReader;r.onload=e=>{try{let t=e.target?.result,r=JSON.parse(t),i=Array.isArray(r)?r:[r];this._isLocalMode=!0,this._lastMessages=i;for(let e of Array.from(this._processor.model.surfacesMap.keys()))this._processor.model.deleteSurface(e);this._processor.processMessages(i),this.showToast(`Successfully loaded mockup from ${n.name}`,`info`)}catch(e){console.error(e),this.showToast(`Failed to parse A2UI JSON: ${e instanceof Error?e.message:String(e)}`,`error`)}},r.readAsText(n),t.value=``}#m(){this._isLocalMode=!1,this._localFileName=``,this._lastMessages=[];for(let e of Array.from(this._processor.model.surfacesMap.keys()))this._processor.model.deleteSurface(e);this.showToast(`Local mockup cleared.`,`info`)}async#h(e){try{this._localFileName=e;let t=await fetch(`/samples/${e}`);if(!t.ok)throw Error(`Failed to fetch sample file: ${t.statusText}`);let n=await t.json(),r=Array.isArray(n)?n:[n];this._isLocalMode=!0,this._lastMessages=r;for(let e of Array.from(this._processor.model.surfacesMap.keys()))this._processor.model.deleteSurface(e);this._processor.processMessages(r),this.showToast(`Successfully loaded sample: ${e}`,`info`)}catch(e){console.error(e),this.showToast(`Failed to load sample JSON: ${e instanceof Error?e.message:String(e)}`,`error`)}}#g(){return this._toastMessage?S`
       <div class="custom-toast ${this._toastType}">
         <span class="toast-text">${this._toastMessage}</span>
         <button class="toast-close" @click=${()=>this._toastMessage=``}>
           <span class="material-symbols">close</span>
         </button>
       </div>
-    `:C}showToast(e,t=`info`){this._toastTimeout&&window.clearTimeout(this._toastTimeout),this._toastMessage=e,this._toastType=t,this._toastTimeout=window.setTimeout(()=>{this._toastMessage=``,this._toastTimeout=void 0},4e3)}};nv([Wt({context:El.markdown})],iv.prototype,`markdownRenderer`,void 0),nv([Sn()],iv.prototype,`_requesting`,void 0),nv([Sn()],iv.prototype,`_lastMessages`,void 0),nv([Sn()],iv.prototype,`config`,void 0),nv([Sn()],iv.prototype,`_loadingTextIndex`,void 0),nv([Sn()],iv.prototype,`_isLocalMode`,void 0),nv([Sn()],iv.prototype,`_localFileName`,void 0),nv([Sn()],iv.prototype,`_toastMessage`,void 0),nv([Sn()],iv.prototype,`_toastType`,void 0),nv([wn(`ui-snackbar`)],iv.prototype,`snackbar`,void 0),iv=nv([E(`a2ui-shell`)],iv);
+    `:C}showToast(e,t=`info`){this._toastTimeout&&window.clearTimeout(this._toastTimeout),this._toastMessage=e,this._toastType=t,this._toastTimeout=window.setTimeout(()=>{this._toastMessage=``,this._toastTimeout=void 0},4e3)}};nv([Wt({context:El.markdown})],iv.prototype,`markdownRenderer`,void 0),nv([Sn()],iv.prototype,`_requesting`,void 0),nv([Sn()],iv.prototype,`_lastMessages`,void 0),nv([Sn()],iv.prototype,`_showJson`,void 0),nv([Sn()],iv.prototype,`config`,void 0),nv([Sn()],iv.prototype,`_loadingTextIndex`,void 0),nv([Sn()],iv.prototype,`_isLocalMode`,void 0),nv([Sn()],iv.prototype,`_localFileName`,void 0),nv([Sn()],iv.prototype,`_toastMessage`,void 0),nv([Sn()],iv.prototype,`_toastType`,void 0),nv([wn(`ui-snackbar`)],iv.prototype,`snackbar`,void 0),iv=nv([E(`a2ui-shell`)],iv);
