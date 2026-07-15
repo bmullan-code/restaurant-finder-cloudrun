@@ -5,3 +5,16 @@
 **/__pycache__
 **/*.pyc
 doc/
+README.md
+LICENSE
+.env.example
+build-frontend.sh
+build.sh
+deploy.sh
+frontend-src/
+node_modules/
+.yarn/
+.yarnrc.yml
+.prettierignore
+package.json
+yarn.lock

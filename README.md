@@ -1,6 +1,6 @@
 # Restaurant Finder Cloud Run deployment
 
-This directory contains the complete Restaurant Finder deployment. It includes the compiled Lit frontend, the Python A2A agent, the A2UI Python SDK code used by the agent, and the Cloud Run build files. Building and deploying do not read files outside this directory.
+This directory contains the complete Restaurant Finder deployment. It includes the Lit frontend source and compiled assets, the Python A2A agent, the A2UI Python SDK code used by the agent, and the Cloud Run build files. Building and deploying do not read files outside this directory.
 
 ## Screenshots
 
@@ -55,15 +55,27 @@ cp .env.example .env
 
 Edit `.env` to select the Google Cloud project, Cloud Run service and region, Vertex AI location, model, memory, and local Docker image name. Both `build.sh` and `deploy.sh` load this file automatically. Values in the file take precedence over inherited shell variables. Set `ENV_FILE` to use a file at another path.
 
+## Frontend source
+
+The editable Lit application is in `frontend-src/`. Its A2UI renderer dependencies are vendored under `frontend-src/vendor/`, so the build does not use the parent A2UI checkout or a private package registry. The generated static files are written to `frontend/`, which the Python server includes in the container.
+
+Install Node.js 20 or newer, then build only the frontend with:
+
+```bash
+./build-frontend.sh
+```
+
+The script uses Corepack and the checked-in Yarn lockfile. It installs the exact dependency versions and replaces the contents of `frontend/` with a production Vite build.
+
 ## Build locally
 
-Docker is required for a local build.
+Node.js 20 or newer and Docker are required for a local build.
 
 ```bash
 ./build.sh
 ```
 
-The image name comes from `.env`. To build with a different configuration file, set `ENV_FILE`:
+The script rebuilds the frontend before creating the container image. The image name comes from `.env`. To build with a different configuration file, set `ENV_FILE`:
 
 ```bash
 ENV_FILE=/path/to/test.env ./build.sh
@@ -71,11 +83,13 @@ ENV_FILE=/path/to/test.env ./build.sh
 
 ## Deploy to Cloud Run
 
-Install the Google Cloud CLI, authenticate it, and run:
+Install Node.js 20 or newer and the Google Cloud CLI, authenticate it, and run:
 
 ```bash
 ./deploy.sh
 ```
+
+The deploy script rebuilds the frontend before it submits the minimal runtime files to Cloud Build.
 
 The sample `.env.example` uses:
 

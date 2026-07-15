@@ -1,0 +1,29 @@
+{
+  "name": "@a2ui/web_core",
+  "version": "0.10.4",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/src/v0_8/index.js",
+  "types": "./dist/src/v0_8/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/v0_8/index.d.ts",
+      "default": "./dist/src/v0_8/index.js"
+    },
+    "./v0_9": {
+      "types": "./dist/src/v0_9/index.d.ts",
+      "default": "./dist/src/v0_9/index.js"
+    },
+    "./v0_9/basic_catalog": {
+      "types": "./dist/src/v0_9/basic_catalog/index.d.ts",
+      "default": "./dist/src/v0_9/basic_catalog/index.js"
+    }
+  },
+  "dependencies": {
+    "@preact/signals-core": "^1.14.2",
+    "date-fns": "^4.4.0",
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.25.2"
+  }
+}

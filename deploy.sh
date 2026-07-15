@@ -40,6 +40,8 @@ if ! command -v gcloud >/dev/null 2>&1; then
   exit 1
 fi
 
+"${SCRIPT_DIR}/build-frontend.sh"
+
 PROJECT_NUMBER="$(
   gcloud projects describe "${PROJECT_ID}" --format='value(projectNumber)'
 )"

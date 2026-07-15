@@ -1,0 +1,4 @@
+frontend/
+frontend-src/public/
+frontend-src/vendor/
+node_modules/

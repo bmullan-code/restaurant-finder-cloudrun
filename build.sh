@@ -27,6 +27,8 @@ fi
 
 readonly IMAGE_NAME="${IMAGE_NAME:-restaurant-finder:local}"
 
+"${SCRIPT_DIR}/build-frontend.sh"
+
 if ! command -v docker >/dev/null 2>&1; then
   echo "Required command not found: docker" >&2
   exit 1

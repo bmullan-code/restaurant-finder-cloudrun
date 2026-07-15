@@ -1,0 +1,21 @@
+{
+  "name": "@a2ui/markdown-it",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/src/markdown.js",
+  "types": "./dist/src/markdown.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/markdown.d.ts",
+      "default": "./dist/src/markdown.js"
+    }
+  },
+  "dependencies": {
+    "dompurify": "3.4.11",
+    "markdown-it": "^14.2.0"
+  },
+  "peerDependencies": {
+    "@a2ui/web_core": "*"
+  }
+}

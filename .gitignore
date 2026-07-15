@@ -22,3 +22,13 @@ htmlcov/
 # Logs and local operating-system files
 *.log
 .DS_Store
+
+# Frontend dependencies and Yarn state
+node_modules/
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
