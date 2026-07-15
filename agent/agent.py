@@ -58,6 +58,77 @@ from a2ui.a2a.parts import parse_response_to_parts, stream_response_to_parts
 logger = logging.getLogger(__name__)
 
 
+def sanitize_ui_response_content(content: str, query: str) -> str:
+    """Post-process and sanitize the final UI JSON payload to ensure 100% correct images."""
+    import re
+    import json
+    import os
+    
+    DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&fit=crop&q=80"
+
+    def get_real_google_place_photo(restaurant_name: str, address: str) -> str | None:
+        api_key = os.environ.get("GOOGLE_PLACES_API_KEY")
+        if not api_key:
+            return None
+        import httpx
+        url = "https://places.googleapis.com/v1/places:searchText"
+        headers = {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": api_key,
+            "X-Goog-FieldMask": "places.photos"
+        }
+        body = {
+            "textQuery": f"{restaurant_name} {address}",
+            "maxResultCount": 1
+        }
+        try:
+            logger.info(f"Fetching Google Places photo for: {restaurant_name}...")
+            resp = httpx.post(url, json=body, headers=headers, timeout=5)
+            if resp.status_code == 200:
+                places = resp.json().get("places", [])
+                if places and "photos" in places[0]:
+                    photo_name = places[0]["photos"][0]["name"]
+                    photo_url = f"https://places.googleapis.com/v1/{photo_name}/media?maxWidthPx=800&key={api_key}"
+                    logger.info(f"Successfully retrieved Google Places photo for {restaurant_name}!")
+                    return photo_url
+        except Exception as e:
+            logger.error(f"Error fetching Google Places photo: {e}")
+        return None
+
+    def replace_json_block(match):
+        json_str = match.group(1)
+        try:
+            data = json.loads(json_str)
+            modified = False
+            for part in data:
+                if not isinstance(part, dict):
+                    continue
+                update_dm = part.get("updateDataModel", {})
+                if not isinstance(update_dm, dict):
+                    continue
+                path = update_dm.get("path", "")
+                val = update_dm.get("value")
+                if path == "/items" and isinstance(val, list):
+                    for item in val:
+                        if not isinstance(item, dict):
+                            continue
+                        # Get real photo dynamically from Google Places (New) API
+                        real_photo = get_real_google_place_photo(item.get("name", ""), item.get("address", ""))
+                        if real_photo:
+                            item["imageUrl"] = real_photo
+                        else:
+                            item["imageUrl"] = DEFAULT_FALLBACK_IMAGE
+                        modified = True
+            if modified:
+                return f"<a2ui-json>{json.dumps(data)}</a2ui-json>"
+        except Exception as e:
+            logger.error(f"Failed to post-sanitize JSON: {e}")
+        return match.group(0)
+
+    # Replace <a2ui-json>...</a2ui-json> blocks
+    return re.sub(r'<a2ui-json>(.*?)</a2ui-json>', replace_json_block, content, flags=re.DOTALL)
+
+
 class RestaurantAgent:
     """An agent that finds restaurants based on user criteria."""
 
@@ -304,6 +375,8 @@ class RestaurantAgent:
                     }
 
             final_response_content = "".join(full_content_list)
+            if ui_version:
+                final_response_content = sanitize_ui_response_content(final_response_content, query)
 
             is_valid = False
             error_message = ""

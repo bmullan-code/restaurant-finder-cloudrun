@@ -16,7 +16,27 @@
 
 import logging
 import os
+import sys
 from pathlib import Path
+
+from dotenv import load_dotenv
+load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent / ".env", override=True)
+
+# Resolve and add local SDK source paths automatically relative to project root
+project_root = Path(__file__).resolve().parent.parent
+sdk_paths = [
+    project_root / "sdk" / "a2ui_agent" / "src",
+    project_root / "sdk" / "a2ui_core" / "src",
+]
+for path in sdk_paths:
+    if path.exists():
+        sys.path.insert(0, str(path))
+
+# Fallback for manual PYTHONPATH overrides
+if "PYTHONPATH" in os.environ:
+    for path in os.environ["PYTHONPATH"].split(os.pathsep):
+        if path and path not in sys.path:
+            sys.path.insert(0, path)
 
 import uvicorn
 from a2a.server.apps import A2AStarletteApplication
@@ -54,7 +74,10 @@ def create_app():
     app.mount("/static", StaticFiles(directory="images"), name="agent-static")
 
     # Mount this last so the A2A routes registered above retain precedence.
-    frontend_dir = Path(os.getenv("FRONTEND_DIR", "/app/frontend"))
+    default_frontend_path = project_root / "frontend"
+    if not default_frontend_path.exists():
+        default_frontend_path = Path("/app/frontend")
+    frontend_dir = Path(os.getenv("FRONTEND_DIR", default_frontend_path))
     app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
     return app
 
