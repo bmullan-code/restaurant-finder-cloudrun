@@ -67,6 +67,11 @@ if [[ "${use_vertex_ai}" != "TRUE" && -z "${GEMINI_API_KEY_SECRET:-}" ]]; then
   exit 1
 fi
 
+runtime_env_vars="AGENT_URL=${SERVICE_URL},GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${GOOGLE_CLOUD_LOCATION},GOOGLE_GENAI_USE_VERTEXAI=${use_vertex_ai},MODEL_NAME=${MODEL_NAME}"
+if [[ -n "${GOOGLE_PLACES_API_KEY:-}" ]]; then
+  runtime_env_vars+=",GOOGLE_PLACES_API_KEY=${GOOGLE_PLACES_API_KEY}"
+fi
+
 deploy_args=(
   run deploy "${SERVICE_NAME}"
   --source .
@@ -75,7 +80,7 @@ deploy_args=(
   --memory "${MEMORY}"
   --allow-unauthenticated
   --set-env-vars
-  "AGENT_URL=${SERVICE_URL},GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${GOOGLE_CLOUD_LOCATION},GOOGLE_GENAI_USE_VERTEXAI=${use_vertex_ai},MODEL_NAME=${MODEL_NAME}"
+  "${runtime_env_vars}"
   --quiet
 )
 

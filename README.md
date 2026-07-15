@@ -76,7 +76,7 @@ GOOGLE_PLACES_API_KEY=your-google-places-api-key
 
 The key must be authorized for the Google Places API used by the application. Restrict the key to the required API and deployment environment.
 
-The current `deploy.sh` does not send `GOOGLE_PLACES_API_KEY` to Cloud Run. A normal deployment continues to use the local and Unsplash image fallbacks. To use Places photos in Cloud Run, the key must be supplied to the service separately, preferably through Secret Manager, and exposed as `GOOGLE_PLACES_API_KEY`.
+When `GOOGLE_PLACES_API_KEY` is set in the shell or `.env`, `deploy.sh` passes it to Cloud Run. If it is absent, the deployment continues to use the local and Unsplash image fallbacks. Passing the key this way stores it as a Cloud Run environment variable. For production deployments, store the key in Secret Manager and expose the secret to the service as `GOOGLE_PLACES_API_KEY`.
 
 ## A2UI learning scripts
 
